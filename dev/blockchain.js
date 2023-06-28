@@ -1,4 +1,5 @@
 const sha256 = require('sha256');
+const currentNodeUrl = process.argv[3];
 
 // A constructor function wil be used to create the blockchain data structure instead of a class because in js there really are no classes in js are a some of sugar cotting o0n top of constructor functions and prototypes
 // class Blockchain {
@@ -12,6 +13,9 @@ const sha256 = require('sha256');
 function Blockchain(){
     this.chain = []; //this property stores the flesh of the blockchain i.e all the blocks that will be mined in this blockchain will be stored in this array
     this.pendingTransactions = []; //all new transactions created will be stored in this array before they are added to the blockchain 
+
+    this.currentNodeUrl = currentNodeUrl; //assigning the current node URL to the blockchain data structure
+    this.networkNodes = []; //this will contain the urls of all the other nodes in the network so that each node will be aware of all the other nodes in the network
 
     //below is the genesis block which is the first block in this blockchain
     this.createNewBlock(100, '0', 'GENESIS'); //the parameters are just arbitrary for this create genesis method
