@@ -90,7 +90,7 @@ Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData)
     while(hash.substring(0, 4) !== '0000'){
         nonce++;
         hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
-        console.log(hash); //logging every hash generated in each iteration till the correct hash is found
+        // console.log(hash); //logging every hash generated in each iteration till the correct hash is found
     }
 
     return nonce; //equivalent to the number of iterations made till the correct hash is found

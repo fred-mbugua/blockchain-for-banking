@@ -1,5 +1,5 @@
 //importing the Blockchain constructor function from blockchain.js
-const Blockchain = require('./Blockchain');
+const Blockchain = require('./blockchain');
 
 //making an insance of the blockchain constructor function
 const fredBlockchain = new Blockchain();
