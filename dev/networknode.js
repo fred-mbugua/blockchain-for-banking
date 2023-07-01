@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const port = process.argv[2]; //process.argv[2] accesses the port specified on package.json start script which is in index 2 of that command
 
 //this library allows a node to make requests to all the other nodes in the network
-// const rp = require('request-promise');
-const rp = require('axios');
+const rp = require('request-promise');
+// const rp = require('axios');
 // import axios from 'axios';
 //const axios = require('axios'); // legacy way
 
@@ -75,7 +75,8 @@ app.post('/register-and-broadcast-node', function(req, res){
         regNodesPromises.push(rp(requestOptions));
     });
 
-    //below, the promise cycles through all the nodes are already through the network and using requestOptions to make a request to each one, the requests shall be assyncronous
+    //below, the promise cycles through all the nodes that are already through the network and using requestOptions to make a request to each one, the requests shall be assyncronous
+    
     Promise.all(regNodesPromises).then(data => {
         const bulkRegisterOptions = {
             uri: newNodeUrl + '/register-nodes-bulk',
@@ -84,11 +85,17 @@ app.post('/register-and-broadcast-node', function(req, res){
             json: true
         };
 
+        console.log(bulkRegisterOptions.body);
+        console.log("rp(bulkRegisterOptions): "+rp(bulkRegisterOptions));
         return rp(bulkRegisterOptions);
     })
     .then(data => {
         res.json({note: 'New node registered with network successfully.'});
-    });
+    })
+    .catch( error => {
+        // handle error
+        // console.log(error);
+      })
 });
 
 //end point below will register a node with the network
@@ -106,10 +113,12 @@ app.post('/register-node', function(req,res){
 //end point will register multiple nodes at once, only hit by the new node that is being added
 app.post('/register-nodes-bulk', function(req, res){
     const allNetworkNodes = req.body.allNetworkNodes;
+    // console.log("req body: " + req.body.allNetworkNodes);
     allNetworkNodes.forEach(networkNodeUrl => {
         const nodeNotAlredyPresent = fredBlockchain.networkNodes.indexOf(networkNodeUrl) == -1; //checking whether the network node is already present in the allNetworkNodes array
         const notCurrentNode = fredBlockchain.currentNodeUrl !== networkNodeUrl;  //checking whether the url is the url for the current node
         if (nodeNotAlredyPresent && notCurrentNode) fredBlockchain.networkNodes.push(networkNodeUrl);
+        // console.log('Network added............................');
     });
 
     res.json({note: "Bulk registration successful."});
