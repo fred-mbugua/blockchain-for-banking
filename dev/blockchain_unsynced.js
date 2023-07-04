@@ -1,9 +1,6 @@
 const sha256 = require('sha256');
 const currentNodeUrl = process.argv[3];
 
-//importing uuid library for creating a unique ID for each transaction
-const { v4: uuidV4 } = require('uuid');
-
 // A constructor function wil be used to create the blockchain data structure instead of a class because in js there really are no classes in js are a some of sugar cotting o0n top of constructor functions and prototypes
 // class Blockchain {
 //     constructor(){
@@ -53,19 +50,12 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) 
     const newTransaction = {
         amount: amount,
         sender: sender,
-        recipient: recipient,
-        transactionId: uuidV4().split('-').join('') //unique transaction ID on every transaction made
+        recipient: recipient
     };
 
-    return newTransaction;
-}
+    this.pendingTransactions.push(newTransaction); //everytime a new transaction is created, it will be pushed to the new transaction array and are recoreded into the blockchain when a new block is created/mined-They are not validated and are just pending transactions
 
-//below method takes a transaction object and add it to the pending transactions of the blockchain
-Blockchain.prototype.addTransactionToPendingTransactions = function(transactionObj){
-    this.pendingTransactions.push(transactionObj);
-
-    //returning index of the block that this transaction will be added to
-    return this.getLastBlock()['index'] + 1;
+    return this.getLastBlock()['index'] + 1; //the number of the block that this transaction will be added to. This new transaction will be in the next created block when it's mined
 }
 
 //hashing blocks
