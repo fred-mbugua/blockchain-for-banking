@@ -16,6 +16,7 @@ const fredBlockchain = new Blockchain();
 
 //importing uuid library for creating a miners address, it creates a unique string which will be this network's node address
 const { v4: uuidV4 } = require('uuid');
+const { post } = require('request');
 const nodeAddress = uuidV4().split('-').join('');
 
 //fetching entire blockchain
@@ -72,15 +73,72 @@ app.get('/mine', function(req, res){
     const nonce = fredBlockchain.proofOfWork(previousBlockHash, currentBlockData);
     const newBlockHash = fredBlockchain.hashBlock(previousBlockHash, currentBlockData, nonce);
 
-    //rewarding this block's miner, who operates this api network node
-    fredBlockchain.createNewTransaction(200, "MINING REWARD", nodeAddress);
-
     const newBlock = fredBlockchain.createNewBlock(nonce, previousBlockHash, newBlockHash);
-    res.json({
-        note: "New block has been mined successfully",
-        block: newBlock
-    })
+
+    //broadcasting new block
+    const requestPromises = []; //array of request promises
+    
+    fredBlockchain.networkNodes.forEach(networkNodeUrl => {
+        const requestOptions = {
+            uri: networkNodeUrl + '/receive-new-block',
+            method: 'POST',
+            body: {newBlock: newBlock},
+            json: true
+        };
+
+        requestPromises.push(rp(requestOptions));
+    });
+
+    Promise.all(requestPromises).then(data => {
+        const requestOptions = {
+            uri: fredBlockchain.currentNodeUrl + '/transaction/broadcast',
+            method: 'POST',
+            body: {
+                //rewarding this block's miner, who operates this api network node
+                //mining reward will be added to the next block, thus, when a new block is mined, there will be pendinmg transactions which is the miners reward
+                amount: 200,
+                sender: "MINER's REWARD",
+                recipient: nodeAddress
+            },
+            json: true
+        };
+        return rp(requestOptions);
+    }).then(data => {
+        res.json({
+            note: "New block has been mined and broadcast successfully",
+            block: newBlock
+        })
+    }).catch( error => {
+        // handling error
+        console.log(error);
+      })
 });
+
+app.post('/receive-new-block', function(req, res){
+    const newBlock = req.body.newBlock;
+    const lastBlock = fredBlockchain.getLastBlock();
+
+    //correctHash variable checks if indeed the new block is legitimate by checking whether it's previous block hash equals this nodes' last block hash, if they are equal, then it's legitimate
+    const correctHash = lastBlock.hash === newBlock.previousBlockHash;
+
+    //checking if the new block has the correct index which means that the new block should be one index above the last block in our chain
+    const correctIndex = lastBlock['index'] + 1 === newBlock['index'];
+
+    if (correctHash && correctIndex) {
+        fredBlockchain.chain.push(newBlock); //adding the new block to the chain after fulfilling legitimacy checks
+        fredBlockchain.pendingTransactions = []; //clearing out all pending transactions
+        res.json({
+            note: 'New block received and accepted.',
+            newBlock: newBlock
+        });
+    } else {
+        res.json({
+            note: 'New block rejected!',
+            newBlock: newBlock
+        });
+    }
+});
+
 
 //end point that will make possible registering of nodes with the network by first registering the node to itself and then broadcasting the node to all the other networks
 app.post('/register-and-broadcast-node', function(req, res){
@@ -110,7 +168,7 @@ app.post('/register-and-broadcast-node', function(req, res){
             body: {allNetworkNodes: [...fredBlockchain.networkNodes, fredBlockchain.currentNodeUrl]},
             json: true
         };
-
+ 
         return rp(bulkRegisterOptions);
     })
     .then(data => {
@@ -148,7 +206,54 @@ app.post('/register-nodes-bulk', function(req, res){
     res.json({note: "Bulk registration successful."});
 });
 
-// let port = 3000;
+//consensus endpoint
+app.get('/consensus', function(req, res){
+    //make a request inside every node and get a copy of the blockchain in that node and compare it to the copy in the current node
+    const requestPromises = [];
+    fredBlockchain.networkNodes.forEach(networkNodeUrl => {
+        const requestOptions = {
+            uri: networkNodeUrl + '/blockchain',
+            method: 'GET',
+            json: true
+        };
+
+        requestPromises.push(rp(requestOptions));
+    });
+
+    Promise.all(requestPromises).then(blockchains => {
+
+        const currentChainLength = fredBlockchain.chain.length;
+        let maxChainLength = currentChainLength;
+        let newLongestChain = null;
+        let newPendingTransactions = null;
+
+        //longest chain rule algorithm
+        blockchains.forEach(blockchain => {
+            if (blockchain.chain.length > maxChainLength) {
+                maxChainLength = blockchain.chain.length;
+                newLongestChain = blockchain.chain;
+                newPendingTransactions = blockchain.pendingTransactions;
+            }
+        });
+
+        if (!newLongestChain || (newLongestChain && !fredBlockchain.chainIsValid(newLongestChain))){ //if there is no chain is longer than the one on this current node
+            res.json({
+                note: 'Current chain has not been replaced.',
+                chain: fredBlockchain.chain
+            });
+        } else if(newLongestChain && fredBlockchain.chainIsValid(newLongestChain)){ //if there is a chain is longer than the one on this current node
+            fredBlockchain.chain = newLongestChain;
+            fredBlockchain.pendingTransactions = newPendingTransactions;
+
+            res.json({
+                note: 'This chain has been replaced.',
+                chain: fredBlockchain.chain
+            });
+        }
+    });
+});
+
+
 app.listen(port, function(){
     console.log('Listening on port ' + `${port}` + '...');
 });
