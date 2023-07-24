@@ -4,15 +4,6 @@ const currentNodeUrl = process.argv[3];
 //importing uuid library for creating a unique ID for each transaction
 const { v4: uuidV4 } = require("uuid");
 
-// A constructor function wil be used to create the blockchain data structure instead of a class because in js there really are no classes in js are a some of sugar cotting o0n top of constructor functions and prototypes
-// class Blockchain {
-//     constructor(){
-//         this.chain = [];
-//         this.pendingTransactions  = [];
-//     }
-
-//     //methods...
-// }
 class Blockchain {
   constructor() {
     this.chain = []; //this property stores the flesh of the blockchain i.e all the blocks that will be mined in this blockchain will be stored in this array
@@ -27,10 +18,11 @@ class Blockchain {
   //The below the below method is it creates a new block, and inside this block, there are new transactions that have been created since the last block was mined, after creating the new block, previous transactions are cleared, the block is pushed into the blockchain and the new block is returned
   createNewBlock(nonce, previousBlockHash, hash) {
     //creating a new block object
+    let time = new Date(Date.now());
     const newBlock = {
       //properties
       index: this.chain.length + 1,
-      timestamp: Date.now(),
+      timestamp: `${time.getDate()}-${time.getMonth()}-${time.getFullYear()}-${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`,
       transactions: this.pendingTransactions,
       nonce: nonce,
       hash: hash,
@@ -72,14 +64,14 @@ class Blockchain {
     const hash = sha256(dataAsString);
     return hash;
   }
-  //Proof of work method that is very important and essencial one that will make this blockchain very secure
+  //Proof of work method that is very important and essential one that will make this blockchain very secure
   /*
         How it works:
         1.Every block chain is a list of blocks
         2.Every single block has to be created and added to the chain
         3.But it's not good that every block created just gets added to the chain
         4.But that every block added to the chain is legitimate and has the correct transactions and correct data inside of it
-        5.Because if it doesn't have the correct data, people could fake how many cash they have and esssentially cause fraud and steal money from other people
+        5.Because if it doesn't have the correct data, people could fake how much money/cash they have and esssentially cause fraud and steal money from other people
         6.So everytime a block is created, it must be ensured it is a legitimate block by mining it through proof of work
     */
   /*
@@ -126,7 +118,7 @@ class Blockchain {
       //hashing every block and making sure every hash starts with zero else, the chain is not valid
       if (blockHash.substring(0, 4) !== "0000") validChain = false;
 
-      //comparing the previous block hash property on the current block with the hash property on the previous block
+      //comparing the previousBlockHashh property on the current block with the hash property on the previous block
       if (currentBlock["previousBlockHash"] !== previousBlock["hash"])
         validChain = false;
 

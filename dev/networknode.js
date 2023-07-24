@@ -1,5 +1,18 @@
-var express = require('express');
-var app = express();
+// var express = require('express');
+// var app = express();
+const express = require('express');
+const app = express();
+
+const path = require('path');
+
+
+let initial_path = path.join(__dirname, "blockexplorer");
+//let to_dashboard_path = path.join(__dirname, "")
+
+
+app.use(express.static(initial_path));
+
+
 const bodyParser = require('body-parser');
 const port = process.argv[2]; //process.argv[2] accesses the port specified on package.json start script which is in index 2 of that command
 
@@ -18,6 +31,10 @@ const fredBlockchain = new Blockchain();
 const { v4: uuidV4 } = require('uuid');
 const { post } = require('request');
 const nodeAddress = uuidV4().split('-').join('');
+
+//path
+// const path = require("path");
+// let initial_path = path.join(__dirname, "block-explorer");
 
 //fetching entire blockchain
 app.get('/blockchain', function(req, res){
@@ -257,6 +274,7 @@ app.get('/consensus', function(req, res){
 app.get('/block/:blockHash', function(req, res){ //localhost:3001/block/HGJGFADSJDFHJKJDJKHDJ
     const blockHash = req.params.blockHash;
     const correctBlock = fredBlockchain.getBlock(blockHash);
+    console.log(correctBlock);
     res.json({
         block: correctBlock
     });
@@ -274,7 +292,7 @@ app.get('/transaction/:transactionId', function(req, res) {
 
 //users will send a specific address and in response expect to get all of the transactions that have been made and correspond to this address; sent or received, plus the balance of this address
 app.get('/address/:address', function(req, res){
-    const address = req.params.address
+    const address = req.params.address;
     const addressData = fredBlockchain.getAddressData(address);
     res.json({
         addressData: addressData
@@ -282,10 +300,15 @@ app.get('/address/:address', function(req, res){
 });
 
 //file-explorer endpoiunt
-app.get('/block-explorer', function(req, res) {
-    res.sendFile('./block-explorer/index.html', {root: __dirname}); //'{root: __dirname}' option says, look into the directory currently in and look for the file with the given path
-});
+// app.get('/block-explorer', function(req, res) {
+//     // res.sendFile(path.join(initial_path, "ui.html"));
+//     res.sendFile('./block-explorer/main.html', {root: __dirname}); //'{root: __dirname}' option says, look into the directory currently in and look for the file with the given path
+// });
 
+//file-explorer endpoint
+app.get('/block-explorer', (req, res) => {
+    res.sendFile(path.join(initial_path, "main.html"))
+});
 
 app.listen(port, function(){
     console.log('Listening on port ' + `${port}` + '...');
