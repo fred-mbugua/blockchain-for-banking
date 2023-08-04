@@ -50,7 +50,7 @@ const calculateTheNumberTotalOfTransactionsInTheBlockchain = (data) => {
       }
     });
 
-    console.log("Transactions = "+allTransactions);
+    // console.log("Transactions = "+allTransactions);
     //using Set() to create an instance of unique values deleting duplicates
     let uniqueTransactions = [...new Set(allTransactions)];
     console.log("Unique transactions = "+uniqueTransactions);
@@ -58,7 +58,7 @@ const calculateTheNumberTotalOfTransactionsInTheBlockchain = (data) => {
 }
 
 const setTotalCountOfAllTransactionsData = (data) => {
-  console.log("Transactions in Block chain data: "+data);
+  // console.log("Transactions in Block chain data: "+data);
   const totalCountAllTransactions = document.querySelector("#no-of-transactions");
   totalCountAllTransactions.innerHTML = data;
 
@@ -271,7 +271,7 @@ fetchTotalCountOfTransactions();
     }
   };
   
-  const createBlockCards = (data, parent) => {
+  const createBlockCards = (data, text) => {
   
     let blocksCards = `
       <h2 class="all">${text}</h2>
