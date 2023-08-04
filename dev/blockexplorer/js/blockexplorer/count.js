@@ -181,7 +181,7 @@ fetchTotalCountOfTransactions();
     }
   };
   
-  const createBlockCards = (data, parent) => {
+  const createBlockCards = (data, text) => {
   
     let blocksCards = `
       <h2 class="all">${text}</h2>
