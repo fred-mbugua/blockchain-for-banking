@@ -27,6 +27,16 @@ export default class TaskContainer extends HTMLElement {
           this.openDetails();
         });
       }
+
+      // const searchBtn = document.querySelector('.search_button');
+      // if (searchBtn != null) {
+      //   searchBtn.addEventListener('click', () => {
+      //     const searchKey = document.querySelector('.search_input').value;
+      //     console.log("Button clicked!")
+      //   //   this.hideSearchBar();
+      //   //   this.openBlockSearchDetails(searchKey);
+      //   });
+      // }
   
     }
   
@@ -53,18 +63,46 @@ export default class TaskContainer extends HTMLElement {
   
     getTemplate() {
       // Show HTML Here
-      return `
-      <div class="item done">
-      <div class="left">
-      <i class="bi bi-layers"></i>
-        <span class="name">
-          <span class="name">${this.getAttribute('name')}</span>
-          <span class="paper">${this.getAttribute('text')}</span>
-        </span>
-      </div>
-      ${this.getDate()}
-    </div>
-      ${this.getStyles()}`;
+      if (this.getAttribute('type') === 'block') {
+        return `
+                <div class="item done">
+                <div class="left">
+                <i class="bi bi-layers"></i>
+                  <span class="name">
+                    <span class="name">${this.getAttribute('name')}</span>
+                    <span class="paper">${this.getAttribute('text')}</span>
+                  </span>
+                </div>
+                ${this.getDate()}
+                </div>
+                ${this.getStyles()}`;
+      } else if (this.getAttribute('type') === 'transaction') {
+        return `
+                <div class="item done">
+                <div class="left">
+                <i class="bi bi-cash"></i>
+                  <span class="name">
+                    <span class="name">${this.getAttribute('name')}</span>
+                    <span class="paper">${this.getAttribute('text')}</span>
+                  </span>
+                </div>
+                ${this.getDate()}
+                </div>
+                ${this.getStyles()}`;
+      } else if (this.getAttribute('type') === 'address') {
+        return `
+                <div class="item done">
+                <div class="left">
+                <i class="bi bi-compass"></i>
+                  <span class="name">
+                    <span class="name">${this.getAttribute('name')}</span>
+                    <span class="paper">${this.getAttribute('text')}</span>
+                  </span>
+                </div>
+                ${this.getDate()}
+                </div>
+                ${this.getStyles()}`;
+      }
     }
 
     getDate(date){

@@ -19,10 +19,43 @@ class Blockchain {
   createNewBlock(nonce, previousBlockHash, hash) {
     //creating a new block object
     let time = new Date(Date.now());
+    let month;
+    let day;
+    let hours;
+    let minutes;
+    let seconds;
+    //putting a zero before the date-time values incase a value is less than ten
+    if (time.getMonth() < 10) {
+      month = `0${time.getMonth()}`;
+    }
+
+    if (time.getDate() < 10) {
+      day = `0${time.getDate()}`;
+    }
+
+    if (time.getHours() < 10) {
+      hours = `0${time.getHours()}`;
+    } else{
+      hours = time.getHours();
+    }
+
+    if (time.getMinutes() < 10) {
+      minutes = `0${time.getMinutes()}`;
+    } else {
+      minutes = time.getMinutes();
+    }
+
+    if (time.getSeconds() < 10) {
+      seconds = `0${time.getSeconds()}`;
+    } else {
+      seconds = time.getSeconds();
+    }
+
+    
     const newBlock = {
       //properties
       index: this.chain.length + 1,
-      timestamp: `${time.getDate()}-${time.getMonth()}-${time.getFullYear()}-${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`,
+      timestamp: `${day}-${month}-${time.getFullYear()} ${hours}:${minutes}:${seconds}`,
       transactions: this.pendingTransactions,
       nonce: nonce,
       hash: hash,
@@ -122,8 +155,8 @@ class Blockchain {
       if (currentBlock["previousBlockHash"] !== previousBlock["hash"])
         validChain = false;
 
-      console.log("previousBlockHash =>", previousBlock["hash"]);
-      console.log("currentBlockHash =>", currentBlock["hash"]);
+      // console.log("previousBlockHash =>", previousBlock["hash"]);
+      // console.log("currentBlockHash =>", currentBlock["hash"]);
     }
 
     //checking the 'GENESIS' block if its properties are correct; it will get checked independently since it's manually created and does not involve the proof of work method

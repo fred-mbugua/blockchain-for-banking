@@ -58,12 +58,12 @@ const calculateTheNumberTotalOfTransactionsInTheBlockchain = (data) => {
     console.log("Transactions = "+allTransactions);
     //using Set() to create an instance of unique values deleting duplicates
     let uniqueTransactions = [...new Set(allTransactions)];
-    console.log("Unique transactions = "+uniqueTransactions);
+    // console.log("Unique transactions = "+uniqueTransactions);
   setTotalCountOfAllTransactionsData(uniqueTransactions.length);
 }
 
 const setTotalCountOfAllTransactionsData = (data) => {
-  console.log("Transactions in Block chain data: "+data);
+  // console.log("Transactions in Block chain data: "+data);
   const totalCountAllTransactions = document.querySelector("#no-of-transactions");
   totalCountAllTransactions.innerHTML = data;
 
@@ -103,12 +103,12 @@ fetchTotalCountOfTransactions();
     console.log("Non Unique address = "+transactionIDs);
     //using Set() to create an instance of unique values deleting duplicates
     let uniqueAddresses = [...new Set(transactionIDs)];
-    console.log("Unique address = "+uniqueAddresses);
+    // console.log("Unique address = "+uniqueAddresses);
     setTotalCountOfAllAddressesData(uniqueAddresses.length);
   }
 
   const setTotalCountOfAllAddressesData = (count) => {
-    console.log("Addresses in Block chain data: "+count);
+    // console.log("Addresses in Block chain data: "+count);
     const totalCountAllTransactions = document.querySelector("#no-of-addresses");
     totalCountAllTransactions.innerHTML = count;
   
@@ -164,7 +164,7 @@ fetchTotalCountOfTransactions();
         return data;
       });
   };
-  
+
   
   //creating the jobs list
   const createBlockList = (data, parent) => {
@@ -183,24 +183,19 @@ fetchTotalCountOfTransactions();
   
   const createBlockCards = (data, parent) => {
   
-    let workCards = "";
-  
-    // console.log(data);
-    for (let i = 0; i < data.length; i++) {
-  
-      workCards += `
-          <block-container block-id="${data[i].chain}" url="url" status="${data[i]}" payment="Paid" text="requested paper in ${data[i]} format"
-            name="${data[i]}" date="${data[i]}">
-          </block-container>
-          `;
+    let blocksCards = `
+      <h2 class="all">${text}</h2>
+    `
+    // console.log("populateBlocksPage Function"+data.chain.length);
+
+    for (let i = 0; i < data.chain.length; i++) {
+      blocksCards += `
+        <block-container type="block" block-id="${data.chain[i].hash}" url="url" status="${data.chain[i].index}" text="Block index ${data.chain[i].index}"
+          name="${data.chain[i].index}" date="${data.chain[i].timestamp}">
+        </block-container>
+      `;
     }
-  
-    if (parent) {
-      let cardContainer = document.querySelector(parent);
-      cardContainer.innerHTML = workCards;
-    } else {
-      return workCards;
-    }
+    return blocksCards;
   };
   
   
@@ -262,12 +257,9 @@ fetchTotalCountOfTransactions();
     let blocksCards = `
       <h2 class="all">${text}</h2>
     `
-  
-    console.log("populateBlocksPage Function"+data.chain.length);
+    // console.log("populateBlocksPage Function"+data.chain.length);
 
     for (let i = 0; i < data.chain.length; i++) {
-  
-  
       blocksCards += `
         <block-container type="block" block-id="${data.chain[i].hash}" url="url" status="${data.chain[i].index}" text="Block index ${data.chain[i].index}"
           name="${data.chain[i].index}" date="${data.chain[i].timestamp}">
@@ -281,22 +273,26 @@ fetchTotalCountOfTransactions();
   
   const populateTransactionsPage = (data, text) => {
   
-    let transactionsCards = `
-      <h2 class="all">${text}</h2>
-    `
+    let noTransactionsHeader = `<h2> No transactions created as per now.</h2>`;
+    let transactionsCards = `<h2 class="all">${text}</h2>`;
+    let transactionsLength;
     data.chain.forEach(block => { //iterating through blocks
+      // console.log("block.transactions.length: "+block.transactions.length)
+      transactionsLength = block.transactions.length;
       block.transactions.forEach(transaction => { //iterating through transactions in the current block
-       
-        console.log("Transactions: "+transaction.sender);
         transactionsCards += `
-        <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.sender} "
-          name="${transaction.sender}">
-        </block-container>
-      `;
+                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.sender} "
+                                name="${transaction.sender}">
+                              </block-container>
+                            `;
       });
-  });
-    
-    contentContainer.innerHTML = transactionsCards;
+    });
+    //checking if the transactions are empty, if they are empty, show the noTransactionsHeader else display the transactions and change the header
+    if (transactionsLength === 0) {
+      contentContainer.innerHTML = noTransactionsHeader;
+    } else if (transactionsLength > 0) {
+      contentContainer.innerHTML = transactionsCards;
+    }
   };
 
 
@@ -304,30 +300,33 @@ fetchTotalCountOfTransactions();
   
     let addressCards = `
       <h2 class="all">${text}</h2>
-    `
+    `;
     let transactionIDs = [];
-    
-    data.chain.forEach(block => { //iterating through blocks
-        block.transactions.forEach(transaction => { //iterating through transactions in the current block
-          //adding transaction Ids to the transactionIds array
-          transactionIDs.push(transaction.transactionId);
-          // console.log("Non Unique address = "+transactionIDs);
-          //using Set() to create an instance of unique values deleting duplicates
-          let uniqueAddresses = [...new Set(transactionIDs)];
-          // console.log("Unique address = "+uniqueAddresses);
-
-      
-          uniqueAddresses.forEach(address => {
-            // console.log("Each Address = "+address)
-            addressCards += `
-        <block-container type="address" block-id="${address}" url="url" text="This is a unique address" "
-          name="${address}">
-        </block-container>
-      `;
-          })
-        });
+      data.chain.forEach(block => { //iterating through blocks
+        if (block.transactions.length === 0) {
+          // console.log("block.transactions.length condition: "+block.transactions.length)
+          addressCards = `<h2> No addresses used as per now.</h2>`;
+        } else {
+          addressCards = `<h2 class="all">${text}</h2>`
+          block.transactions.forEach(transaction => { //iterating through transactions in the current block
+            //adding transaction Ids to the transactionIds array
+            transactionIDs.push(transaction.transactionId);
+            // console.log("Non Unique address = "+transactionIDs);
+            //using Set() to create an instance of unique values deleting duplicates
+            let uniqueAddresses = [...new Set(transactionIDs)];
+            // console.log("Unique address = "+uniqueAddresses);
+            uniqueAddresses.forEach(address => {
+              // console.log("Each Address = "+address)
+              addressCards += `
+                <block-container type="address" block-id="${address}" url="url" text="This is a unique address" "
+                  name="${address}">
+                </block-container>
+              `;
+            })
+          });
+        }
+        
     });
-
     contentContainer.innerHTML = addressCards;
   };
   
@@ -347,8 +346,6 @@ fetchTotalCountOfTransactions();
         contentContainer.innerHTML = tabLoader
         setTimeout(() => {
           getAllBlocks().then((data) =>
-          // console.log("BlockchainData"+data.chain.length)
-          //  console.log(populateBlocksPage(data, "All Blocks")),
            contentContainer.innerHTML = populateBlocksPage(data, "All Blocks")
           );
         }, 1000);
@@ -367,6 +364,15 @@ fetchTotalCountOfTransactions();
           getAllAddresses().then((data) =>
           populateAddressesPage(data, "All Addresses")
           );
+        }, 1000);
+        break;
+      case "search":
+        contentContainer.innerHTML = tabLoader
+        setTimeout(() => {
+          getSearchKey()
+          // then((data) =>
+          // populateSearchPage(data, "Search the entire blockchain")
+          // );
         }, 1000);
         break;
         
