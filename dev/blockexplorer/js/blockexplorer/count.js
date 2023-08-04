@@ -281,8 +281,8 @@ fetchTotalCountOfTransactions();
       transactionsLength = block.transactions.length;
       block.transactions.forEach(transaction => { //iterating through transactions in the current block
         transactionsCards += `
-                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.sender} "
-                                name="${transaction.sender}">
+                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.amount} "
+                                name="${transaction.recipient}">
                               </block-container>
                             `;
       });

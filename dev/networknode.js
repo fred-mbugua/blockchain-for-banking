@@ -26,6 +26,9 @@ const { v4: uuidV4 } = require('uuid');
 const { post } = require('request');
 const nodeAddress = uuidV4().split('-').join('');
 
+//requiring the db functions
+const db = require('./postgres-db/queries');
+
 //----IMPORTING MODULES----//
 require('./network-node-modules/blockchain-endpoint-module')(app, fredBlockchain); //passing "app" and "blockchain" instances
 require('./network-node-modules/consensus-endpoint-module')(app, fredBlockchain, rp); //passing "app", "blockchain" and "rp" instances
@@ -37,6 +40,14 @@ require('./network-node-modules/register-nodes-bulk-endpoint-module')(app, fredB
 require('./network-node-modules/transaction-broadcast-endpoint-module')(app, fredBlockchain, rp); //passing "app", "blockchain" and "rp" instances
 require('./network-node-modules/transaction-endpoint-module')(app, fredBlockchain); //passing "app" and "blockchain" instances
 //-----END OF MODULES IMPORTS----//
+
+//-----Users endpoints------------------//
+app.get('/users', db.getUsers);
+app.get('/users/:id', db.getUserById);
+app.post('/users', db.createUser);
+app.put('/users/:id', db.deleteUser);
+app.delete('/users/:id', db.deleteUser);
+//-----End of Users endpoints------------------//
 
 
 //users will be sending in a specific block hash and this endpoint will return the block that this hash corresponds to

@@ -8,7 +8,6 @@ class Blockchain {
   constructor() {
     this.chain = []; //this property stores the flesh of the blockchain i.e all the blocks that will be mined in this blockchain will be stored in this array
     this.pendingTransactions = []; //all new transactions created will be stored in this array before they are added to the blockchain
-
     this.currentNodeUrl = currentNodeUrl; //assigning the current node URL to the blockchain data structure
     this.networkNodes = []; //this will contain the urls of all the other nodes in the network so that each node will be aware of all the other nodes in the network
 
