@@ -91,3 +91,9 @@ let search = (searchKey) => {
 }
 
 //-----------End of Searching---------------------------//
+
+//-----------Begin Sending money---------------------------//
+const sendMoneyToAddress = (req, res) => {
+    fetch('/')
+}
+//-----------End of Sending money---------------------------//

@@ -1,6 +1,14 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+module.exports = {
+    bcrypt,
+    saltRounds,
+}
+
+
 let initial_path = path.join(__dirname, "blockexplorer");
 let customer_interface_path = path.join(__dirname, "customer-interface");
 
@@ -44,9 +52,11 @@ require('./network-node-modules/transaction-endpoint-module')(app, fredBlockchai
 //-----Users endpoints------------------//
 app.get('/users', db.getUsers);
 app.get('/users/:id', db.getUserById);
+app.post('/user/:address', db.getUserByAddress);
 app.post('/users', db.createUser);
 app.put('/users/:id', db.deleteUser);
 app.delete('/users/:id', db.deleteUser);
+app.post('/users/validate', db.loginUser);
 //-----End of Users endpoints------------------//
 
 
@@ -86,10 +96,15 @@ app.get('/fredblockchain', function(req, res) {
     res.sendFile(path.join(customer_interface_path, "main.html"))
 });
 
-// cusomer-interface login endpoiunt
+// cusomer-interface login endpoint
 app.get('/fredblockchain-login', function(req, res) {
     // res.sendFile('./customer-interface/login.html', {root: __dirname}); //'{root: __dirname}' option says, look into the directory currently in and look for the file with the given path
-    res.sendFile(path.join(customer_interface_path, "login.html"))
+    res.sendFile(path.join(customer_interface_path, "/access/login.html"))
+});
+
+// cusomer-interface login endpoiunt
+app.get('/fredblockchain-signup', function(req, res) {
+    res.sendFile(path.join(customer_interface_path, "/access/signup.html"))
 });
 
 //file-explorer endpoint

@@ -31,8 +31,21 @@ export default class ModalTask extends HTMLElement {
             // console.log(data.block)
             content.innerHTML = this.getContent('block', data)
           });
+          }, 100);
+
+          setTimeout(() => {
+            let items = this.querySelectorAll('a.transaction-item')
+            console.log(items)
+            if (items) {
+              items.forEach(item => {
+                item.addEventListener('click', (event) => {
+                  event.preventDefault()
+                  this.openTransaction(item.dataset.id)
+                })
+              });
+            }
           }, 1500);
-          
+           
           break;
         case 'transaction':
           setTimeout(() => {
@@ -40,8 +53,13 @@ export default class ModalTask extends HTMLElement {
               method: 'GET',
           }).then(res => res.json())
           .then(data => {
-            // console.log(data.block)
-            content.innerHTML = this.getContent('transaction', data)
+
+            // console.log(data)
+            if (data.transaction) {
+              content.innerHTML = this.getContent('transaction', data)
+            } else {
+              content.innerHTML = `<p class="thats-it">No transaction found for this address</p>`
+            }
           });
           }, 1500);
           break;
@@ -80,7 +98,6 @@ export default class ModalTask extends HTMLElement {
       this.enableScroll()
     }
   
-  
     disableScroll() {
       // Get the current page scroll position
       let scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -97,7 +114,23 @@ export default class ModalTask extends HTMLElement {
       document.body.classList.remove("stop-scrolling");
       window.onscroll = function() {};
     }
-  
+
+    openTransaction(key){
+        // updating the state
+        let parent  = document.querySelector('body');
+
+        let html  = `
+          <modal-task
+              id="${key}"
+              status="paid"
+              type="transaction"
+            >
+          </modal-task>`;
+
+        parent.insertAdjacentHTML('beforeEnd', html);
+
+        this.remove()
+    }
   
     getTemplate() {
       // Show HTML Here
@@ -139,11 +172,9 @@ export default class ModalTask extends HTMLElement {
                 ${data.block.timestamp}
                 </span>
               </div>
-              <div class="description">
-              <p class="title">Block Transactions:</p>
-                <span class="text">
+              <div class="description-all">
+                <p class="title">Block Transactions:</p>
                 ${this.getFiles(data.block.transactions)}
-                </span>
               </div>
               <div class="description">
                 <p class="title">Block Nonce Value:</p>
@@ -250,7 +281,7 @@ export default class ModalTask extends HTMLElement {
       let html = ``
       for (let index = 0; index < transactions.length; index++) {
         html += `
-          <a href="${transactions[index]}">
+          <a style="padding: 0px 0;" class="transaction-item" data-id="${transactions[index].transactionId}" href="#">
             <span class="file-name">${transactions[index].transactionId}</span>
           </a>
         `
@@ -295,6 +326,14 @@ export default class ModalTask extends HTMLElement {
       <style>
         * {
           box-sizing: border-box !important;
+        }
+        p.thats-it{
+          margin: 0;
+          padding: 20px 0;
+          color: #404040;
+          text-align: center;
+          font-size: 1.5rem;
+          width: 100%;
         }
         .delete-popup{
           margin-top: 10px;
@@ -446,6 +485,19 @@ export default class ModalTask extends HTMLElement {
           justify-content: center;
           gap: 5px;
           color: #404040;
+        }
+        .infos>.description-all{
+          padding: 0 0 0 0;
+          margin: 0;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          gap: 2px;
+          color: #404040;
+        }
+        .infos>.description-all>p{
+          margin: 5px 0;
+          font-weight: bold;
         }
         .infos>.description>p{
           margin: 0;

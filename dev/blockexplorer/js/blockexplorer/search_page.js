@@ -49,6 +49,39 @@
 //create a search input and get search key
   const getSearchKey = () => {
     getSearchBar();
+    const searchBtn = document.querySelector('.search_button');
+    //   searchBtn.addEventListener('click', () => {
+    //     const searchKey = document.querySelector('.search_input').value;
+    //     console.log("Button clicked!")
+    //   //   this.hideSearchBar();
+    //   //   this.openBlockSearchDetails(searchKey);
+    //   });
+
+      // console.log("searchBtn"+searchBtn)
+      if(searchBtn != null){
+        searchBtn.addEventListener('click', () => {
+          const searchKey = document.querySelector('.search_input').value;
+          // console.log("Button clicked!"+searchKey)
+          // this.hideSearchBar();
+          this.openBlockSearchDetails(searchKey);
+        });
+      }
+  }
+
+ function openBlockSearchDetails(key) {
+    // updating the state
+    let parent  = document.querySelector('body');
+
+    // response.remove()
+    let html  = `
+      <modal-task
+          id="${key}"
+          status="paid"
+          type="transaction"
+        >
+      </modal-task>`;
+
+    parent.insertAdjacentHTML('beforeEnd', html);
   }
 
   function getSearchBar() {
@@ -112,7 +145,6 @@
       /* position: sticky; */
       top: 0.4rem;
       justify-content: center;
-      z-index: 99;
     }
     
     .search__section-items{
@@ -168,20 +200,4 @@
   }
 
 
-      const searchBtn = document.querySelector('.search_button');
-    //   searchBtn.addEventListener('click', () => {
-    //     const searchKey = document.querySelector('.search_input').value;
-    //     console.log("Button clicked!")
-    //   //   this.hideSearchBar();
-    //   //   this.openBlockSearchDetails(searchKey);
-    //   });
-
       
-      if(searchBtn != null){
-        searchBtn.addEventListener('click', () => {
-          const searchKey = document.querySelector('.search_input').value;
-          console.log("Button clicked!")
-        //   this.hideSearchBar();
-        //   this.openBlockSearchDetails(searchKey);
-        });
-      }
