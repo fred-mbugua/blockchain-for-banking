@@ -1,74 +1,21 @@
-// let searchPageContainer = document.querySelector('.content-items');
-// const searchInput = `
-//     <h1 class="search-pg-title">Search the entire blockchain</h1>
-//     <section class="search__section">
-//       <div class="search__section-items">
-//         <div class="search__section-items-input">
-//           <input
-//             type="text"
-//             name="search_input"
-//             class="search_input"
-//             placeholder="search blocks, transactions or addresses here.."
-//           />
-//         </div>
-//         <div class="search__section-items-searchicon">
-//           <button class="search_button" name="search_button">
-//             <i class="fa fa-search"></i>
-//           </button>
-//         </div>
-//       </div>
-//     </section>
-//     <!--End of nav section-->
-//     `;
-//     searchPageContainer.innerHTML = searchInput;
-
-
-
-      
-
-//       const populateSearchPage = (data, text) => {
-  
-//         let transactionsCards = `
-//           <h2 class="all">${text}</h2>
-//         `
-//         data.chain.forEach(block => { //iterating through blocks
-//           block.transactions.forEach(transaction => { //iterating through transactions in the current block
-           
-//             console.log("Transactions: "+transaction.sender);
-//             transactionsCards += `
-//             <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.sender} "
-//               name="${transaction.sender}">
-//             </block-container>
-//           `;
-//           });
-//       });
-        
-//         contentContainer.innerHTML = transactionsCards;
-//       };
-
 //create a search input and get search key
   const getSearchKey = () => {
     getSearchBar();
     const searchBtn = document.querySelector('.search_button');
-    //   searchBtn.addEventListener('click', () => {
-    //     const searchKey = document.querySelector('.search_input').value;
-    //     console.log("Button clicked!")
-    //   //   this.hideSearchBar();
-    //   //   this.openBlockSearchDetails(searchKey);
-    //   });
-
+    
       // console.log("searchBtn"+searchBtn)
       if(searchBtn != null){
         searchBtn.addEventListener('click', () => {
           const searchKey = document.querySelector('.search_input').value;
+          const type = document.querySelector('.search__section-option').value;
           // console.log("Button clicked!"+searchKey)
           // this.hideSearchBar();
-          this.openBlockSearchDetails(searchKey);
+          this.openBlockSearchDetails(searchKey, type);
         });
       }
   }
 
- function openBlockSearchDetails(key) {
+ function openBlockSearchDetails(key, type) {
     // updating the state
     let parent  = document.querySelector('body');
 
@@ -77,7 +24,7 @@
       <modal-task
           id="${key}"
           status="paid"
-          type="transaction"
+          type="${type}"
         >
       </modal-task>`;
 
@@ -90,6 +37,11 @@
     <h1 class="search-pg-title">Search the entire blockchain</h1>
     <section class="search__section">
       <div class="search__section-items">
+        <select class="search__section-option">
+          <option value="block">Block</option>
+          <option value="transaction">Transaction</option>
+          <option value="address">Address</option>
+        </select>
         <div class="search__section-items-input">
           <input
             type="text"
@@ -100,7 +52,7 @@
         </div>
         <div class="search__section-items-searchicon">
           <button class="search_button" id="search_button" name="search_button">
-            <i class="fa fa-search"></i>
+          <i class="bi bi bi-search"></i>
           </button>
         </div>
       </div>
@@ -148,11 +100,16 @@
     }
     
     .search__section-items{
-        width: 70%;
-        height: fit-content;
-        display: grid;
-        align-items: center;
-        grid-template-columns: 90% 10%;
+      width: 70%;
+      height: fit-content;
+      display: flex;
+      align-items: center;
+    }
+
+    .search__section-option{
+      width: fit-content;
+      height: 40px;
+      border-radius: 7px 0 0 7px;
     }
     
     .search__section-items-input{
@@ -166,7 +123,7 @@
         height: 40px;
         color: #000;
         border: 1px solid var(--color-blue);
-        border-radius: 7px 0 0 7px;
+        border-radius: 0;
         padding-left: 7px;
     }
     

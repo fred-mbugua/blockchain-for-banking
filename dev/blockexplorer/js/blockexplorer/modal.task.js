@@ -29,7 +29,11 @@ export default class ModalTask extends HTMLElement {
           }).then(res => res.json())
           .then(data => {
             // console.log(data.block)
-            content.innerHTML = this.getContent('block', data)
+            if (data.block) {
+              content.innerHTML = this.getContent('block', data)
+            } else {
+              content.innerHTML = `<p class="thats-it">No block found for this hash</p>`
+            }
           });
           }, 100);
 
@@ -58,7 +62,7 @@ export default class ModalTask extends HTMLElement {
             if (data.transaction) {
               content.innerHTML = this.getContent('transaction', data)
             } else {
-              content.innerHTML = `<p class="thats-it">No transaction found for this address</p>`
+              content.innerHTML = `<p class="thats-it">No transaction found for this id</p>`
             }
           });
           }, 1500);
@@ -69,8 +73,13 @@ export default class ModalTask extends HTMLElement {
               method: 'GET',
           }).then(res => res.json())
           .then(data => {
-            // console.log(data.block)
-            content.innerHTML = this.getContent('address', data)
+            
+            if (data.addressData) {
+              // console.log("address endpoint "+data.addressData.addressBalance)
+              content.innerHTML = this.getContent('address', data.addressData)
+            } else {
+              content.innerHTML = `<p class="thats-it">No address found for this address</p>`
+            }
           });
           }, 1500);
 
@@ -232,49 +241,55 @@ export default class ModalTask extends HTMLElement {
             `
             break;
 
-          //   case 'address':
-          // return`
-          //   <div class="infos">
-          //     <div class="head">
-          //       <div class="name">${data.addressData.index}</div>
-          //       <div class="user-info">
-          //         <span class="email">${data.block.timestamp}</span>
-          //         <span class="num">${data.block.transactions}</span>
-          //       </div>
-          //     </div>
-          //     <div class="description">
-          //       <p class="title">Due</p>
-          //       <span class="text">
-          //       ${data.block.nonce}
-          //       </span>
-          //     </div>
-          //     <div class="description">
-          //       <p class="title">Paper Type</p>
-          //       <span class="text">
-          //         ${data.block.hash} Paper format
-          //       </span>
-          //     </div>
-          //     <div class="description">
-          //       <p class="title">Academic Level</p>
-          //       <span class="text">
-          //         ${data.block.previousBlockHash}
-          //       </span>
-          //     </div>
+            case 'address':
+          return`
+            <div class="infos">
+              <div class="description">
+                <p class="title">Balance</p>
+                <span class="text">
+                ${data.addressBalance}
+                </span>
+              </div>
+              ${this.getAddressData(data.addressTransactions)}
               
-          //     <div class="files">
-          //       <p class="title">Attached files</p>
-          //       <div class="links">
-          //         ${this.getFiles(data.block.transactions)}
-          //       </div>
-          //     </div>
-          //   </div>
-          // `
-          // break;
+              
+            </div>
+          `
+          break;
       
         default:
           break;
       }
       
+    }
+
+    getAddressData(addressTransactions){
+      let html = ``;
+      addressTransactions.forEach(transaction => {
+        html += `
+                <div class="address_transactions_list">
+                    <div class="description">
+                    <p class="title">Sender</p>
+                      <span class="text">
+                      ${transaction.sender}
+                      </span>
+                    </div>
+                    <div class="description">
+                    <p class="title">Recipient</p>
+                      <span class="text">
+                      ${transaction.recipient}
+                      </span>
+                    </div>
+                    <div class="description">
+                    <p class="title">Transaction Amount</p>
+                      <span class="text">
+                      ${transaction.amount}
+                      </span>
+                    </div>
+                </div>
+                `;
+      })
+      return html;
     }
   
     getFiles(transactions){
@@ -334,6 +349,13 @@ export default class ModalTask extends HTMLElement {
           text-align: center;
           font-size: 1.5rem;
           width: 100%;
+        }
+        .address_transactions_list{
+          border: 1px solid #08b86f;
+          border-radius: 7px;
+          margin-top: 3px;
+          margin-bottom: 3px;
+          padding: 3px;
         }
         .delete-popup{
           margin-top: 10px;
@@ -486,6 +508,15 @@ export default class ModalTask extends HTMLElement {
           gap: 5px;
           color: #404040;
         }
+        .infos>.address_transactions_list>.description{
+          padding: 0 0 0 0;
+          margin: 0;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          gap: 5px;
+          color: #404040;
+        }
         .infos>.description-all{
           padding: 0 0 0 0;
           margin: 0;
@@ -500,6 +531,10 @@ export default class ModalTask extends HTMLElement {
           font-weight: bold;
         }
         .infos>.description>p{
+          margin: 0;
+          font-weight: bold;
+        }
+        .infos>.address_transactions_list>.description>p{
           margin: 0;
           font-weight: bold;
         }
@@ -759,6 +794,7 @@ export default class ModalTask extends HTMLElement {
           .order-contents{
             margin: 0 10px;
           }
+
           #responses .response-head{
             border-bottom: none;
             margin: 0 10px;

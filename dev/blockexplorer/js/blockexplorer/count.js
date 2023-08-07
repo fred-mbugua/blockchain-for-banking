@@ -91,18 +91,19 @@ fetchTotalCountOfTransactions();
 
 
   const calculateTheNumberOfAddresses = (data) => {
-    let transactionIDs = [];
+    let transactionsAddresses = [];
 
     data.chain.forEach(block => { //iterating through blocks
         block.transactions.forEach(transaction => { //iterating through transactions in the current block
           //adding transaction Ids to the transactionIds array
-          transactionIDs.push(transaction.transactionId);
+          transactionsAddresses.push(transaction.sender);
+          transactionsAddresses.push(transaction.recipient);
         });
     });
 
-    console.log("Non Unique address = "+transactionIDs);
+    // console.log("Non Unique address = "+transactionAddresses);
     //using Set() to create an instance of unique values deleting duplicates
-    let uniqueAddresses = [...new Set(transactionIDs)];
+    let uniqueAddresses = [...new Set(transactionsAddresses)];
     // console.log("Unique address = "+uniqueAddresses);
     setTotalCountOfAllAddressesData(uniqueAddresses.length);
   }
@@ -281,8 +282,8 @@ fetchTotalCountOfTransactions();
       transactionsLength = block.transactions.length;
       block.transactions.forEach(transaction => { //iterating through transactions in the current block
         transactionsCards += `
-                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.amount} "
-                                name="${transaction.recipient}">
+                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction Amount: ${transaction.amount}, sent by: ${transaction.sender}"
+                                name="Transaction ID: ${transaction.transactionId}">
                               </block-container>
                             `;
       });
@@ -301,7 +302,7 @@ fetchTotalCountOfTransactions();
     let addressCards = `
       <h2 class="all">${text}</h2>
     `;
-    let transactionIDs = [];
+    let transactionsAddresses = [];
       data.chain.forEach(block => { //iterating through blocks
         if (block.transactions.length === 0) {
           // console.log("block.transactions.length condition: "+block.transactions.length)
@@ -310,10 +311,11 @@ fetchTotalCountOfTransactions();
           addressCards = `<h2 class="all">${text}</h2>`
           block.transactions.forEach(transaction => { //iterating through transactions in the current block
             //adding transaction Ids to the transactionIds array
-            transactionIDs.push(transaction.transactionId);
+            transactionsAddresses.push(transaction.sender);
+            transactionsAddresses.push(transaction.recipient);
             // console.log("Non Unique address = "+transactionIDs);
             //using Set() to create an instance of unique values deleting duplicates
-            let uniqueAddresses = [...new Set(transactionIDs)];
+            let uniqueAddresses = [...new Set(transactionsAddresses)];
             // console.log("Unique address = "+uniqueAddresses);
             uniqueAddresses.forEach(address => {
               // console.log("Each Address = "+address)

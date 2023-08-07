@@ -1,8 +1,11 @@
+//--------------CUSTOMER INTERFACE MODULES IMPORT--------------------//
+// import sendMoneyActivity from "./customer-interface-modules/send-money-module";
+
+//--------------END OF CUSTOMER INTERFACE MODULES IMPORT--------------------//
+
 //----Getting count data------------//
-
-
 //--------------Start of fetching address data to get account balance----------//
-let currentAddress;
+const currentAddress = customer.customerAddress;
 let fetchAddressData = (req, res) => {
   // console.log('Fetching balance');
     fetch(`/address/${currentAddress}`,{
@@ -16,8 +19,25 @@ let fetchAddressData = (req, res) => {
   
   const setUserBalance = (data) => {
     // console.log("Block chain data: "+data.chain.length);
-    const totalBalance = document.querySelector("#current-user-balance");
-    totalBalance.innerHTML = data.addressData.addressBalance;
+    const totalBalance = document.querySelector(".current-user-balance");
+    const time = new Date(Date.now());
+    let month;
+    let day;
+
+    //putting a zero before the date-time values incase a value is less than ten
+    if (time.getMonth() < 10) {
+    month = `0${time.getMonth()}`;
+    }
+
+    if (time.getDate() < 10) {
+    day = `0${time.getDate()}`;
+    }
+
+    //formatted date
+    const customerInterfaceDate = document.querySelector('.customer-interface-date');
+    customerInterfaceDate.innerHTML = `Today ${day}/${month}/${time.getFullYear()}`;
+    const userBalance = data.addressData.addressBalance;
+    totalBalance.innerHTML = userBalance;
   };
   //reading total number of blocks
   fetchAddressData();
@@ -53,7 +73,7 @@ const calculateTheNumberTotalOfTransactionsInTheBlockchain = (data) => {
     // console.log("Transactions = "+allTransactions);
     //using Set() to create an instance of unique values deleting duplicates
     let uniqueTransactions = [...new Set(allTransactions)];
-    console.log("Unique transactions = "+uniqueTransactions);
+    // console.log("Unique transactions = "+uniqueTransactions);
   setTotalCountOfAllTransactionsData(uniqueTransactions.length);
 }
 
@@ -86,24 +106,25 @@ fetchTotalCountOfTransactions();
 
 
   const calculateTheNumberOfAddresses = (data) => {
-    let transactionIDs = [];
+    let transactionsAddresses = [];
 
     data.chain.forEach(block => { //iterating through blocks
         block.transactions.forEach(transaction => { //iterating through transactions in the current block
           //adding transaction Ids to the transactionIds array
-          transactionIDs.push(transaction.transactionId);
+          transactionsAddresses.push(transaction.sender);
+          transactionsAddresses.push(transaction.recipient);
         });
     });
 
-    console.log("Non Unique address = "+transactionIDs);
+    // console.log("Non Unique address = "+transactionAddresses);
     //using Set() to create an instance of unique values deleting duplicates
-    let uniqueAddresses = [...new Set(transactionIDs)];
-    console.log("Unique address = "+uniqueAddresses);
+    let uniqueAddresses = [...new Set(transactionsAddresses)];
+    // console.log("Unique address = "+uniqueAddresses);
     setTotalCountOfAllAddressesData(uniqueAddresses.length);
   }
 
   const setTotalCountOfAllAddressesData = (count) => {
-    console.log("Addresses in Block chain data: "+count);
+    // console.log("Addresses in Block chain data: "+count);
     const totalCountAllTransactions = document.querySelector("#no-of-addresses");
     totalCountAllTransactions.innerHTML = count;
   
@@ -134,7 +155,7 @@ fetchTotalCountOfTransactions();
   const displayActivities = () => {
     contentContainer.innerHTML = `
     <div class="activities__container">
-        <div class="activity">
+        <div class="activity activity_send_money">
             <span class="activity__icon"><i class="uil uil-bitcoin-circle"></i></span>
             <h5>Send Money</h5>
         </div>
@@ -144,14 +165,17 @@ fetchTotalCountOfTransactions();
             <h5>Withdraw</h5>
         </div>
 
-        <div class="activity">
+        <div class="activity activity_deposit_money">
             <span class="activity__icon"><i class="uil uil-file-edit-alt"></i></span>
-            <h5>Balance</h5>
+            <h5>Deposit</h5>
         </div>  
     </div>
     ${getActivitiesStyles()}
     `;
+    sendMoneyActivity();
+    depositMoneyActivity();
   }
+
   
   const getActivitiesStyles = () => {
     return `
@@ -360,7 +384,7 @@ fetchTotalCountOfTransactions();
   
   const populateTransactionsPage = (data, text) => {
   
-    let noTransactionsHeader = `<h2> You have not made any transaction.</h2>`;
+    let noTransactionsHeader = `<h2> No transactions created as per now.</h2>`;
     let transactionsCards = `<h2 class="all">${text}</h2>`;
     let transactionsLength;
     data.chain.forEach(block => { //iterating through blocks
@@ -368,8 +392,8 @@ fetchTotalCountOfTransactions();
       transactionsLength = block.transactions.length;
       block.transactions.forEach(transaction => { //iterating through transactions in the current block
         transactionsCards += `
-                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction ID: ${transaction.transactionId}, Amount sent: ${transaction.sender} "
-                                name="${transaction.sender}">
+                              <block-container type="transaction" block-id="${transaction.transactionId}" url="url" text="Transaction Amount: ${transaction.amount}, sent by: ${transaction.sender}"
+                                name="Transaction ID: ${transaction.transactionId}">
                               </block-container>
                             `;
       });
@@ -388,19 +412,20 @@ fetchTotalCountOfTransactions();
     let addressCards = `
       <h2 class="all">${text}</h2>
     `;
-    let transactionIDs = [];
+    let transactionsAddresses = [];
       data.chain.forEach(block => { //iterating through blocks
         if (block.transactions.length === 0) {
           // console.log("block.transactions.length condition: "+block.transactions.length)
-          addressCards = `<h2> You have not made any transaction to any address.</h2>`;
+          addressCards = `<h2> No addresses used as per now.</h2>`;
         } else {
           addressCards = `<h2 class="all">${text}</h2>`
           block.transactions.forEach(transaction => { //iterating through transactions in the current block
             //adding transaction Ids to the transactionIds array
-            transactionIDs.push(transaction.transactionId);
+            transactionsAddresses.push(transaction.sender);
+            transactionsAddresses.push(transaction.recipient);
             // console.log("Non Unique address = "+transactionIDs);
             //using Set() to create an instance of unique values deleting duplicates
-            let uniqueAddresses = [...new Set(transactionIDs)];
+            let uniqueAddresses = [...new Set(transactionsAddresses)];
             // console.log("Unique address = "+uniqueAddresses);
             uniqueAddresses.forEach(address => {
               // console.log("Each Address = "+address)
@@ -416,6 +441,8 @@ fetchTotalCountOfTransactions();
     });
     contentContainer.innerHTML = addressCards;
   };
+
+  
   
   //default
   contentContainer.innerHTML = tabLoader
@@ -434,10 +461,9 @@ fetchTotalCountOfTransactions();
         contentContainer.innerHTML = tabLoader
         setTimeout(() => {
           displayActivities();
-          // getAllBlocks().then((data) =>
-          //  contentContainer.innerHTML = populateBlocksPage(data, "All Blocks")
-          // );
+    
         }, 1000);
+        
         break;
       case "transactions":
         contentContainer.innerHTML = tabLoader

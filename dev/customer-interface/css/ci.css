@@ -121,6 +121,92 @@ html,body{
   .login_div>form>a:hover{
     text-decoration: underline;
   }
+
+  .overlay{
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    width: 100%;
+    background-color: hsl(219, 28%, 16%, .7);
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+  }
+
+  .send-response{
+    text-align: center;
+    color: #08b86f;
+  }
+
+  .activities-details-input{
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 10%;
+    display: flex;
+    flex-flow: column;
+    align-content: center;
+    justify-content: center;
+    align-items: stretch;
+    color: #404040;
+    gap: 0px;
+    width: 60%;
+  }
+
+  .activities-details-input>p{
+    margin: 0;
+    padding: 19px 0px 5px 5px;
+    color: #404040;
+    align-self: stretch;
+    /* border:  1px solid #80808027; */
+  }
+  .activities-details-input>input{
+    padding: 4px 10px;
+    border-radius: 10px;
+    color: #808080;
+    outline: none;
+    border:  1px solid #80808027;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+  }
+  .activities-details-input>input:focus{
+    border:  1px solid #08b86f27;
+    color: #08b86f;
+  }
+
+  .close-overlay{
+    color: #f84125;
+    background-color: #fff;
+    padding: 14px;
+    border: 1px solid #f84125;
+    border-radius: 7px;
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    cursor: pointer;
+  }
+
+  .complete-transaction-button{
+    margin-top: 14px;
+    padding: 5px 20px;
+    background-color:  #08b86f;
+    color: #ffffff;
+    align-self: center;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -ms-border-radius: 50px;
+    -o-border-radius: 50px;
+  }
+
+  .complete-transaction-button:hover {
+    cursor: pointer;
+  }
   
   
   modal-task{
@@ -150,6 +236,8 @@ html,body{
     flex-flow: column;
     gap: 0;
   }
+
+  
   
   main.dash>header.head{
     border-bottom: 1px solid #80808017;

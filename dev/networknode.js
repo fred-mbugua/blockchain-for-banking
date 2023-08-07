@@ -89,6 +89,15 @@ app.get('/address/:address', function(req, res){
     });
 });
 
+//users will send a specific address and in response expect to get all of the pending transactions that have been made and correspond to this address; sent or received, plus the balance of this address
+app.get('/pendingaddress/:address', function(req, res){
+    const address = req.params.address;
+    const addressData = fredBlockchain.getPendingTransactionsAddressData(address);
+    res.json({
+        addressData: addressData
+    });
+});
+
 // cusomer-interface endpoiunt
 app.get('/fredblockchain', function(req, res) {
     // res.sendFile(path.join(initial_path, "ui.html"));

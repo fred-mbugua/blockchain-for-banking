@@ -225,13 +225,40 @@ class Blockchain {
     //looping through the addressTransactions array to figure out what the balance of each address is
     let balance = 0;
     addressTransactions.forEach(transaction => {
-        if (transaction.recipient === address) balance += transaction.amount;
-        else if (transaction.sender === address) balance -= transaction.amount;
+        if (transaction.recipient === address) balance += Number(transaction.amount);
+        else if (transaction.sender === address) balance -= Number(transaction.amount);
     });
 
     return {
         addressTransactions: addressTransactions,
-        addressBalance: balance
+        addressBalance: Number(balance)
+    };
+  };
+
+  //get all pending transactions associated with this address and put them into a single array
+  getPendingTransactionsAddressData(address) {
+    const addressTransactions = [];
+    let uniqueTransactions = [];
+
+    //looping through the transactions in the blockchain to see if there is one that has the sender or recipient as the parsed address and put the transaction into the addressTransactions array
+    this.pendingTransactions.forEach(transaction => {
+        if (((transaction.sender === address || transaction.recipient === address) && (transaction.sender !== "MINER's REWARD") && (!transaction[1])))  {
+          addressTransactions.push(transaction);
+          uniqueTransactions = [...new Set(addressTransactions)];
+      };
+    });
+
+    //looping through the addressTransactions array to figure out what the balance of each address is
+    let balance = 0;
+    uniqueTransactions.forEach(transaction => {
+      balance += Number(transaction.amount);
+        // if (transaction.recipient === address) balance += Number(transaction.amount);
+        // else if (transaction.sender === address) balance -= Number(transaction.amount);
+    });
+
+    return {
+        addressTransactions: addressTransactions,
+        addressBalance: Number(balance)
     };
   };
 }

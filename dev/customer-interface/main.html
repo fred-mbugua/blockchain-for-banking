@@ -5,12 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FredBlockChain: Dashboard</title>
-  <link rel="stylesheet" href="../css/explorer.css" type="text/css" />
+  <link rel="stylesheet" href="../css/ci.css" type="text/css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
   <script type="module">
+    // import sendMoneyActivity from "../js/customer-interface-modules/send-money-module";
     import ModalTask from "../js/modal.task.js";
     import TaskContainer from "../js/task.js";
   
@@ -21,7 +22,26 @@
 </head>
 
 <body>
+  <div class="overlay" style="display: none;">
+    <span class="close-overlay">close</span>
+    <div class="activities-details-input" id="send-details-input" style="display: none;">
+      <p class="send-response" id="send-response" style="color: #f84125; display: none;">You have successfully sent Ksh.300 to user address: erueriuhjrijuio. </p>
+      <p>Recipient ID</p>
+      <input type="text" name="" placeholder="Enter the id of recipient" id="recipient_id">
+      <p>Amount</p>
+      <input type="text" name="" placeholder="Enter Amount you want to send" id="recipient_send_amount">
+      
+      <button class="complete-transaction-button" id="proceed_sending">Send</button><br />
+    </div>
 
+    <div class="activities-details-input" id="deposit-details-input" style="display: none;">
+      <p class="send-response" id="deposit-response" style="color: #f84125; display: none;">You have successfully deposited Ksh.300. </p>
+      <p>Deposit Amount</p>
+      <input type="text" name="" placeholder="Enter Amount you want to send" id="deposit_amount">
+      
+      <button class="complete-transaction-button" id="proceed_depositing">Deposit</button><br />
+    </div>
+  </div>
   <main class="dash">
     <header class="head">
       <div class="logo">
@@ -61,6 +81,7 @@
       </section>
       <section class="content" id="content">
         <div class="all" id="all">
+          <p class="customer-address" style="color: blue; display: flex; align-items: center; justify-content: center;"></p>
           <div class="stats">
             <div class="total">
               <span class="icon">
@@ -120,9 +141,15 @@
       </section>
     </div>
   </main>
-  <script src="../js/count.js"></script>
   <script src="../js/search_page.js"></script>
   <script src="../access/js/is.user.loggedin.js"></script>
-  <script src="../js/client_count.js"></script>
-</body>
+  <!-- <script type="module">
+    import sendMoneyActivity from "../js/customer-interface-modules/send-money-module";
+  </script> -->
+  <!-- <script type="module">
+    import sendMoneyActivity from "../js/customer-interface-modules/send-money-module.js";
+  </script>   -->
+  <script src="../js/count.js"></script>
+  <script src="../js/customer-interface-modules/send-money-module.js"></script>
+  <script src="../js/customer-interface-modules/deposit-money-module.js"></script>
 </html>
