@@ -482,6 +482,9 @@ html,body{
     border-radius: 15px;
     animation: skeleton 1s linear infinite alternate;
   }
+  .file-name{
+    color: chocolate;
+  }
   @keyframes skeleton {
     0%{
       background-color: #ececec;

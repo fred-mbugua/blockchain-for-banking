@@ -24,7 +24,7 @@ const sendMoneyActivity = () => {
 
 
 const sendMoneyToAddress = (userBalance, pendingTransactionsBalance) => {
-    console.log('balance: '+userBalance)
+    // console.log('balance: '+userBalance)
     const sendMoneyButton = document.querySelector('#proceed_sending');
     const sendResponse = document.querySelector('#send-response');
     const address = document.querySelector('#recipient_id');

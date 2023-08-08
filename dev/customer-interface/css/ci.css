@@ -58,8 +58,8 @@ html,body{
   }
   
   .login_div>.logo-image>img{
-    width: auto;
-    height: 60px;
+    width: 300px;
+    height: auto;
   }
   
   .login_div>form{
@@ -99,6 +99,7 @@ html,body{
   }
   .login_div>form>input[type="button"]{
     padding: 5px 20px;
+    margin-top: 20px;
     background-color:  #08b86f;
     color: #ffffff;
     align-self: center;
@@ -114,9 +115,12 @@ html,body{
     padding: 16px 20px;
     text-decoration: none;
     /* color: #23a6d5; */
-    color: #f84125;
+    color: #08b86f;
     text-align: center;
     align-self: center;
+  }
+  .login_div>form>a.lost-psswd-link{
+    color: #f84125;
   }
   .login_div>form>a:hover{
     text-decoration: underline;
@@ -593,6 +597,10 @@ html,body{
   }
   
   @media screen and ( max-width: 600px ){
+    main.dash>header.head>.name {
+      font-size: 0.7rem;
+  }
+   
     main.dash > .main {
       padding: 0 0 0 0;
     }

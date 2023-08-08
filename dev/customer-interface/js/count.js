@@ -160,7 +160,7 @@ fetchTotalCountOfTransactions();
             <h5>Send Money</h5>
         </div>
 
-        <div class="activity">
+        <div class="activity activity_withdraw_money">
             <span class="activity__icon"><i class="uil uil-palette"></i></span>
             <h5>Withdraw</h5>
         </div>
@@ -173,6 +173,7 @@ fetchTotalCountOfTransactions();
     ${getActivitiesStyles()}
     `;
     sendMoneyActivity();
+    withdrawMoneyActivity();
     depositMoneyActivity();
   }
 

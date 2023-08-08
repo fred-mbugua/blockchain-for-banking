@@ -24,6 +24,7 @@
 <body>
   <div class="overlay" style="display: none;">
     <span class="close-overlay">close</span>
+
     <div class="activities-details-input" id="send-details-input" style="display: none;">
       <p class="send-response" id="send-response" style="color: #f84125; display: none;">You have successfully sent Ksh.300 to user address: erueriuhjrijuio. </p>
       <p>Recipient ID</p>
@@ -32,6 +33,15 @@
       <input type="text" name="" placeholder="Enter Amount you want to send" id="recipient_send_amount">
       
       <button class="complete-transaction-button" id="proceed_sending">Send</button><br />
+    </div>
+
+    <div class="activities-details-input" id="withdraw-details-input" style="display: none;">
+      <p class="send-response" id="withdraw-response" style="color: #f84125; display: none;">You have successfully withdrawed Ksh.300. </p>
+      <p>Withdraw Amount</p>
+      <input type="text" name="" placeholder="Enter Amount you want to withdraw" id="withdraw_amount">
+      <p style="color: #08b86f;"><i>transaction cost: Ksh.10</i></p>
+
+      <button class="complete-transaction-button" id="proceed_withdrawing">Withdraw</button><br />
     </div>
 
     <div class="activities-details-input" id="deposit-details-input" style="display: none;">
@@ -46,8 +56,8 @@
     <header class="head">
       <div class="logo">
         <div class="logo-image">
-          <!-- <img class="logo-scroll" src="../images/fredblockchain.png" alt="FredBlockChain"> -->
-          <p>FredBlockChain</p>
+          <img class="logo-scroll" src="../images/fredblockchain_logo.png" alt="FredBlockChain">
+          <!-- <p>FredBlockChain</p> -->
         </div>
       </div>
       <div class="name customer-name">Welcome client</div>
@@ -151,5 +161,6 @@
   </script>   -->
   <script src="../js/count.js"></script>
   <script src="../js/customer-interface-modules/send-money-module.js"></script>
+  <script src="../js/customer-interface-modules/withdraw-money-module.js"></script>
   <script src="../js/customer-interface-modules/deposit-money-module.js"></script>
 </html>
