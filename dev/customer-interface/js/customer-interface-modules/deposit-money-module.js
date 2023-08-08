@@ -14,6 +14,7 @@ const depositMoneyActivity = () => {
     closeOverlayButton.addEventListener('click', () => {
       depositMoneyOverlay.style.display = 'none';
       depositMoneyForm.style.display = 'none';
+      location.reload();
     });
     
   }
@@ -28,6 +29,7 @@ const depositMoneyActivity = () => {
         if (amount.value === "" || amount.value === null) {
             depositResponse.innerHTML = "Ensure there is a value in the amount field.";
             depositResponse.style.display = "flex";
+            depositMoneyButton.style.display = "none";
           } else {
             fetch('/transaction/broadcast', {
                 method: 'post',
@@ -44,9 +46,11 @@ const depositMoneyActivity = () => {
                 depositResponse.innerHTML = data.success;
                 depositResponse.style.color = "#08b86f";
                 depositResponse.style.display = "flex";
+                depositMoneyButton.style.display = "none";
               } else {
                 depositResponse.innerHTML = data.note;
                 depositResponse.style.display = "flex";
+                depositMoneyButton.style.display = "none";
               }
             });
           }

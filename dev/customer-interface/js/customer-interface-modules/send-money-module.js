@@ -18,6 +18,7 @@ const sendMoneyActivity = () => {
     closeOverlayButton.addEventListener('click', () => {
       sendMoneyOverlay.style.display = 'none';
       sendMoneyForm.style.display = 'none';
+      location.reload();
     });
     
   }
@@ -34,7 +35,7 @@ const sendMoneyToAddress = (userBalance, pendingTransactionsBalance) => {
     const pendingAndIncomingTotal = Number(amount.value) + Number(pendingTransactionsBalance)
     // console.log('Total balance: '+totalBalance)
     // console.log('Block chain balance: '+userBalance)
-    console.log('PendingTransactionsBalance: '+pendingTransactionsBalance)
+    // console.log('PendingTransactionsBalance: '+pendingTransactionsBalance)
     
     sendMoneyButton.addEventListener('click', () => {
         sendResponse.style.display = "none";
@@ -43,12 +44,15 @@ const sendMoneyToAddress = (userBalance, pendingTransactionsBalance) => {
       if (address.value === "" || amount.value === "" || address.value === null || amount.value === null || address.value === undefined || amount.value === undefined) {
         sendResponse.innerHTML = "Check if you have an empty input field.";
         sendResponse.style.display = "flex";
+        sendMoneyButton.style.display = 'none';
       } else if(userBalance < amount.value){
         sendResponse.innerHTML = "The amount you are trying to send is more than your account balance.";
         sendResponse.style.display = "flex";
+        sendMoneyButton.style.display = 'none';
       }else if(((Number(amount.value) + Number(pendingTransactionsBalance)) - Number(userBalance)) > 0){
         sendResponse.innerHTML = `The amount you are trying to input together with the amount already sent and in pending transactions of this blockchains' node of Ksh.${pendingTransactionsBalance} totals to Ksh.${(Number(amount.value) + Number(pendingTransactionsBalance))} which is more than your balance of Ksh.${userBalance}. You cannot transact more than you have. Deposit more to your account if you want to continue sending.`;
         sendResponse.style.display = "flex";
+        sendMoneyButton.style.display = 'none';
       } else {
 
         return fetch("/transaction/broadcast", {
@@ -68,7 +72,6 @@ const sendMoneyToAddress = (userBalance, pendingTransactionsBalance) => {
               sendResponse.style.color = "#08b86f";
               sendResponse.style.display = "flex";
               sendMoneyButton.style.display = "none";
-              location.reload();
             } else {
               sendResponse.innerHTML = data.note;
               sendResponse.style.display = "flex";

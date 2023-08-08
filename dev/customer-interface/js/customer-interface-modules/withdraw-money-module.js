@@ -14,6 +14,7 @@ const withdrawMoneyActivity = () => {
     closeOverlayButton.addEventListener('click', () => {
       withdrawMoneyOverlay.style.display = 'none';
       withdrawMoneyForm.style.display = 'none';
+      location.reload();
     });
     
   }
@@ -51,8 +52,8 @@ const withdrawMoneyActivity = () => {
     const totalBalance = Number(userBalance) - Number(pendingTransactionsUserBalance);
     const transactionCharges = Number(10);
     let totalWithdrawalAmount;
-    console.log('Total balance: '+totalBalance)
-    console.log('Block chain balance: '+userBalance)
+    // console.log('Total balance: '+totalBalance)
+    // console.log('Block chain balance: '+userBalance)
     
 
     withdrawMoneyButton.addEventListener("click", () => {
@@ -60,12 +61,12 @@ const withdrawMoneyActivity = () => {
       console.log('Total withdrawal amount: '+totalWithdrawalAmount)
         if (amount.value === "" || amount.value === null) {
             withdrawResponse.innerHTML = "Ensure there is a value in the amount field.";
-            withdrawResponse.style.display = "flex";
+            withdrawMoneyButton.style.display = 'none';
             location.reload();
           }else if (totalBalance < Number(totalWithdrawalAmount)) {
             withdrawResponse.innerHTML = `You account balance of ksh.${userBalance} minus you pending transactions transacted amount of ksh.${pendingTransactionsUserBalance} is less than the amount you are trying to withdraw plus the withdrawal charges of Ksh.10.`;
             withdrawResponse.style.display = "flex";
-            location.reload();
+            withdrawMoneyButton.style.display = 'none';
           } else {
             fetch('/transaction/broadcast', {
                 method: 'post',
@@ -82,11 +83,11 @@ const withdrawMoneyActivity = () => {
                 withdrawResponse.innerHTML = data.success;
                 withdrawResponse.style.color = "#08b86f";
                 withdrawResponse.style.display = "flex";
-                location.reload();
+                withdrawMoneyButton.style.display = 'none';
               } else {
                 withdrawResponse.innerHTML = data.note;
                 withdrawResponse.style.display = "flex";
-                location.reload();
+                withdrawMoneyButton.style.display = 'none';
               }
             });
           }
