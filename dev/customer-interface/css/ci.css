@@ -126,6 +126,10 @@ html,body{
     text-decoration: underline;
   }
 
+  .customer-address{
+    text-align: center;
+  }
+
   .overlay{
     top: 0;
     bottom: 0;

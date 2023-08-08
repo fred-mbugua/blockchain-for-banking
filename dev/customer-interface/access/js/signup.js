@@ -8,14 +8,61 @@ const customerConfirmPassword = document.querySelector('#signup_user_confirm_pas
 let agreedPassword;
 
 customerSignupBtn.addEventListener('click', () => {
+    // declare all characters
+    const characters ='abcdefghijklmnopqrstuvwxyz0123456789';
+
+    function generateUserBlockchainAddress(length) {
+        let address = ' ';
+        const charactersLength = characters.length;
+        for ( let i = 0; i < length; i++ ) {
+            address += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return address;
+    }
+
+    //getting date
+    let time = new Date(Date.now());
+    let month;
+    let day;
+    let hours;
+    let minutes;
+    let seconds;
+    //putting a zero before the date-time values incase a value is less than ten
+    if (time.getMonth() < 10) {
+      month = `0${time.getMonth()}`;
+    }
+
+    if (time.getDate() < 10) {
+      day = `0${time.getDate()}`;
+    }
+
+    if (time.getHours() < 10) {
+      hours = `0${time.getHours()}`;
+    } else{
+      hours = time.getHours();
+    }
+
+    if (time.getMinutes() < 10) {
+      minutes = `0${time.getMinutes()}`;
+    } else {
+      minutes = time.getMinutes();
+    }
+
+    if (time.getSeconds() < 10) {
+      seconds = `0${time.getSeconds()}`;
+    } else {
+      seconds = time.getSeconds();
+    }
+
+    console.log(generateUserBlockchainAddress(20));
     let data = {
         customers_customer_id: 755696,
         customers_customer_first_name: customerFirstName.value,
         customers_customer_second_name: customerSecondName.value,
         customers_customer_user_name: customerUserName.value,
-        customers_customer_address: "HGFHEJVTGEYD",
-        customers_customer_registration_date: "04/08/2023",
-        customers_customer_last_transaction_date: "04/08/2023",
+        customers_customer_address: generateUserBlockchainAddress(20),
+        customers_customer_registration_date: `${day}-${month}-${time.getFullYear()} ${hours}:${minutes}:${seconds}`,
+        customers_customer_last_transaction_date: `${day}-${month}-${time.getFullYear()} ${hours}:${minutes}:${seconds}`,
         customers_customer_last_transaction_id: 4785,
         customers_customer_password: agreedPassword,
         customers_customer_email_address: customerEmail.value,
