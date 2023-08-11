@@ -121,6 +121,11 @@ app.get('/block-explorer', (req, res) => {
     res.sendFile(path.join(initial_path, "main.html"))
 });
 
+//file-explorer endpoint
+app.get('/', (req, res) => {
+    res.sendFile(path.join(initial_path, "main.html"))
+});
+
 app.listen(port, function(){
     console.log('Listening on port ' + `${port}` + '...');
 });
