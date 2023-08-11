@@ -24,12 +24,14 @@ class Blockchain {
     let minutes;
     let seconds;
     //putting a zero before the date-time values incase a value is less than ten
-    if (time.getMonth() < 10) {
-      month = `0${time.getMonth()}`;
-    }
-
     if (time.getDate() < 10) {
       day = `0${time.getDate()}`;
+    } else {
+      day = time.getDate();
+    }
+
+    if (time.getMonth() < 10) {
+      month = `0${time.getMonth()}`;
     }
 
     if (time.getHours() < 10) {
