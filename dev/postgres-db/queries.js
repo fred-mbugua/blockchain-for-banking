@@ -5,7 +5,7 @@ const saltRnds = pswdEncrypt.saltRounds;
 const Pool = require('pg').Pool
 const pool = new Pool({
     user: 'fred',
-    host: 'postgres://fred:PkaVQF3UboR6U1lnOudKeXnnSyDEJkXX@dpg-ciompjmnqqlfege03c70-a.oregon-postgres.render.com/logistics_app',
+    host: 'dpg-cjba6jfdb61s73fh8ilg-a',
     database: 'fred_blockchain_db',
     password: '9u1Bed7aYpQ2LIFCoKfArwpbA2OCbGy5',
     port: 5432,
